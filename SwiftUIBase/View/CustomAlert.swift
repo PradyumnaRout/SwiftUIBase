@@ -8,163 +8,147 @@
 import Combine
 import SwiftUI
 
-enum AlertType {
-    
-    case success(title: String, message: String = "")
-    case error(title: String, message: String = "")
-    
-    func title() -> String {
-        switch self {
-        case .success(title: let title, _):
-            return title
-        case .error(title: let title, _):
-            return title
-        }
-    }
-    
-    func message() -> String {
-        switch self {
-        case .success(_, message: let message):
-            return message
-        case .error(_, message: let message):
-            return message
-        }
-    }
-}
-
 struct CustomAlert: View {
     
-    @State var alertType: AlertType
-    // public var style: AlertStyle? = nil
+    var title: String = ""
+    var message: String = ""
     var leftActionText: String = ""
     var rightActionText: String = ""
     var image: UIImage? = nil
     
     var leftButtonAction: (() -> Void)?
     var rightButtonAction: (() -> Void)?
-    //  var isSingleButton:Bool? = false
     let verticalButtonsHeight: CGFloat = 80
     
+    @State private var show = false
     
     
     var body: some View {
-        GeometryReader { geometry in
-            VStack {
-                ZStack {
-                    VStack(spacing: 0) {
-                        
-                        if image != nil {
-                            Image(uiImage: image ?? UIImage())
-                                .resizable()
-                            // .clipShape(Circle())
-                                .frame(width: 100, height: 100)
-                                .padding(.top, 10)
-                            
-                        }
-                        
-                        
-                        if !alertType.title().isEmpty {
-                            
-                            // alert title
-                            Text(alertType.title())
-                                .font(.system(size: 20, weight: .bold))
-                                .foregroundColor(Color.black)
-                                .multilineTextAlignment(.center)
-                                .padding(.top, 16)
-                                .padding(.bottom, 8)
-                                .padding(.horizontal, 30)
-                                .fixedSize(horizontal: false, vertical: true)
-                        }
-                        if !alertType.message().isEmpty {
-                            // alert message
-                            Text(alertType.message())
-                                .font(.system(size: 16, weight: .regular ))
-                                .foregroundColor(Color.gray)
-                                .multilineTextAlignment(.center)
-                                .padding(.horizontal, 25)
-                                .padding(.bottom, 16)
-                                .fixedSize(horizontal: false, vertical: true)
-                                .padding(.all, 0)
-                        }
-                        HStack(spacing: 20) {
-                            
-                            // left button
-                            if (!(leftActionText.isEmpty)) {
-                                Button {
-                                    leftButtonAction?()
-                                } label: {
-                                    Text(leftActionText)
-                                        .font(.system(size: 16, weight: .bold))
-                                        .foregroundColor(.white)
-                                    
-                                        .multilineTextAlignment(.center)
-                                        .padding()
-                                        .frame(maxWidth: .infinity)
-                                }
-                                .accessibilityIdentifier("removebtn")
-                                .background(.gray)
-                                .cornerRadius(10)
-                            }
-                            
-                            // right button (default)
-                            if (!(rightActionText.isEmpty)) {
-                                Button {
-                                    rightButtonAction?()
-                                        
-                                } label: {
-                                    Text(rightActionText)
-                                        .font(.system(size: 16, weight: .bold))
-                                        .foregroundColor(.white)
-                                        .multilineTextAlignment(.center)
-                                        .padding(15)
-                                    
-                                        .frame(maxWidth: .infinity)
-                                }
-                                .accessibilityIdentifier("removebtn")
-                                .background(.blue)
-                                .cornerRadius(10)
-                            }
-                        }
-                        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: 50)
-                        .padding([.horizontal], 20)
-                        .padding(.bottom, 20)
-                        
-                        
+        VStack {
+            ZStack {
+                VStack(spacing: 0) {
+                    
+                    if image != nil {
+                        Image(uiImage: image ?? UIImage())
+                            .resizable()
+                        // .clipShape(Circle())
+                            .frame(width: 100, height: 100)
+                            .padding(.top, 10)
+                    } else {
+                        Image(systemName: "bell.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 50, height: 50)
+                            .foregroundStyle(.red)
                     }
-                    .padding(.top, 10)
-                    .frame(width: UIScreen.main.bounds.width - 30)
-                    .background(
-                        Color.white
-                    )
-                    .cornerRadius(10)
+                    
+                    
+                    if !title.isEmpty {
+                        // Alert title
+                        Text(title)
+                            .alertStyle(
+                                font: .system(size: 20, weight: .bold),
+                                foregroundColor: Color.black,
+                                textAlignment: .center,
+                                paddingTop: 16,
+                                paddingBottom: 8,
+                                paddingHorizontal: 30
+                            )
+                    }
+                    if !message.isEmpty {
+                        // alert message
+                        Text(message)
+                            .alertStyle(
+                                font: .system(size: 16, weight: .regular ),
+                                foregroundColor: Color.gray,
+                                textAlignment: .center,
+                                paddingTop: 0,
+                                paddingBottom: 16,
+                                paddingHorizontal: 25
+                            )
+                    }
+                    HStack(spacing: 20) {
+                        
+                        // left button
+                        if (!(leftActionText.isEmpty)) {
+                            Button {
+                                withAnimation(.spring()) {
+                                    show = false
+                                }
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                                    leftButtonAction?()
+                                }
+                            } label: {
+                                Text(leftActionText)
+                                    .font(.system(size: 16, weight: .bold))
+                                    .foregroundColor(.white)
+                                    .multilineTextAlignment(.center)
+                                    .padding()
+                                    .frame(maxWidth: .infinity)
+                            }
+                            .accessibilityIdentifier("removebtn")
+                            .background(.gray)
+                            .cornerRadius(10)
+                        }
+                        
+                        // right button (default)
+                        if (!(rightActionText.isEmpty)) {
+                            Button {
+                                withAnimation(.spring()) {
+                                    show = false
+                                }
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                                    rightButtonAction?()
+                                }
+                                
+                            } label: {
+                                Text(rightActionText)
+                                    .font(.system(size: 16, weight: .bold))
+                                    .foregroundColor(.white)
+                                    .multilineTextAlignment(.center)
+                                    .padding(15)
+                                    .frame(maxWidth: .infinity)
+                            }
+                            .accessibilityIdentifier("removebtn")
+                            .background(.blue)
+                            .cornerRadius(10)
+                        }
+                    }
+                    .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: 50)
+                    .padding([.horizontal], 20)
+                    .padding(.bottom, 20)
                 }
-                .zIndex(2)
-                
+                .padding(.vertical, 20)
+                .background(
+                    Color.white
+                )
+                .cornerRadius(20)
+                .padding(.horizontal, 15)
+                .shadow(color: .black.opacity(0.4), radius: 5, x: 0, y: 0)
+                .scaleEffect(show ? 1 : 0.7)
+                .opacity(show ? 1 : 0)
             }
-            .frame(width: geometry.size.width, height: geometry.size.height, alignment: .center)
-            .background(.gray.opacity(0.5))
-            .ignoresSafeArea()
+            .zIndex(2)
         }
+        .onAppear {
+            withAnimation(.spring()) {
+                show = true
+            }
+        }
+        .ignoresSafeArea()
     }
 }
 
-/*
- // Just explained how to present
- VStack {
- ....
- 
- }
- if presentAlert{
- CustomAlert(alertType: .success(title: "Done", message: "jfbnfdikcfjdocjgikjopdxjk"), leftActionText: "vfgfgbg", rightActionText: "right", image:UIImage(named: "cafeMeets")) {
- withAnimation{
- print("left")
- }
- } rightButtonAction: {
- withAnimation{
- print("right")
- self.presentAlert.toggle()
- }
- }
- }
- 
- */
+
+
+#Preview {
+    CustomAlert(title: "Alert", message: "Are you sure you want to verify the new email for this account?", leftActionText: "No", rightActionText: "Verify", image:UIImage(named: "cafeMeets")) {
+        withAnimation{
+            print("left")
+        }
+    } rightButtonAction: {
+        withAnimation{
+            print("right")
+        }
+    }
+}

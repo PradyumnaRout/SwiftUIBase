@@ -1,5 +1,6 @@
 import Network
 import SwiftUI
+import Combine
 
 // An enum to handle the network status
 enum NetworkStatus: String {

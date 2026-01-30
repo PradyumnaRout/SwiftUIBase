@@ -11,32 +11,32 @@ extension String {
     /// Localizes a string using given language from Language enum.
     /// - parameter language: The language that will be used to localized string.
     /// - Returns: localized string.
-    func localized(_ language: Language) -> String {
-        let path = Bundle.main.path(forResource: language.rawValue, ofType: "lproj")
-        let bundle: Bundle
-        if let path = path {
-            bundle = Bundle(path: path) ?? .main
-        } else {
-            bundle = .main
-        }
-        return localized(bundle: bundle)
-    }
+//    func localized(_ language: Language) -> String {
+//        let path = Bundle.main.path(forResource: language.rawValue, ofType: "lproj")
+//        let bundle: Bundle
+//        if let path = path {
+//            bundle = Bundle(path: path) ?? .main
+//        } else {
+//            bundle = .main
+//        }
+//        return localized(bundle: bundle)
+//    }
     
     /// Localizes a string using given language from Language enum.
     ///  - Parameters:
     ///  - language: The language that will be used to localized string.
     ///  - args:  dynamic arguments provided for the localized string.
     /// - Returns: localized string.
-    func localized(_ language: Language, args arguments: CVarArg...) -> String {
-        let path = Bundle.main.path(forResource: language.rawValue, ofType: "lproj")
-        let bundle: Bundle
-        if let path = path {
-            bundle = Bundle(path: path) ?? .main
-        } else {
-            bundle = .main
-        }
-        return String(format: localized(bundle: bundle), arguments: arguments)
-    }
+//    func localized(_ language: Language, args arguments: CVarArg...) -> String {
+//        let path = Bundle.main.path(forResource: language.rawValue, ofType: "lproj")
+//        let bundle: Bundle
+//        if let path = path {
+//            bundle = Bundle(path: path) ?? .main
+//        } else {
+//            bundle = .main
+//        }
+//        return String(format: localized(bundle: bundle), arguments: arguments)
+//    }
     
     /// Localizes a string using self as key.
     ///

@@ -14,7 +14,7 @@ struct AppConstants {
     
     static let screenWidth = UIScreen.main.bounds.size.width
     static let screenHeight = UIScreen.main.bounds.size.height
-    static let baseUrl = AppEnvironment.baseURL
+    static let baseUrl = AppEnvironment.baseURl
     static var enableEncryption = false
     static var enableChecksum = false
     
@@ -27,7 +27,7 @@ struct AppConstants {
     static let platform = "iOS"
     static let os_version = UIDevice.current.systemVersion
     static var accessToken: String?
-    static let iS_Simulator = (TARGET_IPHONE_SIMULATOR == 1)
+//    static let iS_Simulator = (TARGET_IPHONE_SIMULATOR == 1)
     static let useAES256Encryption: Bool = false
 }
 
@@ -43,12 +43,12 @@ struct AppInfo {
 // MARK: Disable print for production.
 
 // Enable or Disable Print Log
-public func print(_ items: Any..., separator: String = " ", terminator: String = "\n") {
-    if AppEnvironment.isDebug == true {
-        let output = items.map { "\($0)" }.joined(separator: separator)
-        Swift.print(output, terminator: terminator)
-    }
-}
+//public func print(_ items: Any..., separator: String = " ", terminator: String = "\n") {
+//    if AppEnvironment.isDebug == true {
+//        let output = items.map { "\($0)" }.joined(separator: separator)
+//        Swift.print(output, terminator: terminator)
+//    }
+//}
 
 
 struct AppDateFormats {

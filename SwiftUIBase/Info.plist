@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<!--
-   Info.plist
-   SwiftUIBase
-
-   Created by hb on 29/01/26.
-   Copyright (c) 2026 ___ORGANIZATIONNAME___. All rights reserved.
--->
 <plist version="1.0">
-<dict/>
+<dict>
+	<key>BASE_URL</key>
+	<string>$(BASE_URL)</string>
+	<key>ENVIRONMENT</key>
+	<string>$(ENVIRONMENT)</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.967132541509-ssos1o0oicoc3nbgfu47l3vv87ueo3vp</string>
+			</array>
+		</dict>
+	</array>
+    <key>GIDClientID</key>
+    <string>967132541509-ssos1o0oicoc3nbgfu47l3vv87ueo3vp.apps.googleusercontent.com</string>
+</dict>
 </plist>

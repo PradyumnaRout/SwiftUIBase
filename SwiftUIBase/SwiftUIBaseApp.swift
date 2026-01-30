@@ -9,9 +9,16 @@ import SwiftUI
 
 @main
 struct SwiftUIBaseApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    
+//    @StateObject private var router = NavRouter()
+    @State private var router = NavRouter()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootView()
+//                .environmentObject(router)
+                .environment(router)
         }
     }
 }

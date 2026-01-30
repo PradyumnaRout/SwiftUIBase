@@ -64,9 +64,9 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     
     func handlePushNotification(userInfo: [AnyHashable: Any]) {
         print(userInfo)
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
-            GlobalService.shared.dictNotification = userInfo
-        }
+//        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
+//            GlobalService.shared.dictNotification = userInfo
+//        }
     }
     
     func hideNotifications() {

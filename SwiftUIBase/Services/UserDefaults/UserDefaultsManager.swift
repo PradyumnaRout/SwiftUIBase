@@ -38,26 +38,26 @@ struct UserDefaultsManager {
         }
     }
     
-    static var loggedUserInfo: User.ViewModel? {
-        get {
-            guard let decoded = applicationDefaults.object(forKey: UserDefaultsKey.userDetail) as? Data else {
-                return nil
-            }
-            let decoder = JSONDecoder()
-            let decodedUser = try? decoder.decode(User.ViewModel.self, from: decoded)
-            return decodedUser
-        }
-        set {
-            if let newObject = newValue {
-                let encoder = JSONEncoder()
-                let encodedData = try? encoder.encode(newObject)
-                applicationDefaults.setValue(encodedData, forKey: UserDefaultsKey.userDetail)
-                applicationDefaults.synchronize()
-            } else {
-                applicationDefaults.removeObject(forKey: UserDefaultsKey.userDetail)
-            }
-        }
-    }
+//    static var loggedUserInfo: User.ViewModel? {
+//        get {
+//            guard let decoded = applicationDefaults.object(forKey: UserDefaultsKey.userDetail) as? Data else {
+//                return nil
+//            }
+//            let decoder = JSONDecoder()
+//            let decodedUser = try? decoder.decode(User.ViewModel.self, from: decoded)
+//            return decodedUser
+//        }
+//        set {
+//            if let newObject = newValue {
+//                let encoder = JSONEncoder()
+//                let encodedData = try? encoder.encode(newObject)
+//                applicationDefaults.setValue(encodedData, forKey: UserDefaultsKey.userDetail)
+//                applicationDefaults.synchronize()
+//            } else {
+//                applicationDefaults.removeObject(forKey: UserDefaultsKey.userDetail)
+//            }
+//        }
+//    }
     
     static var userID: String {
         get {

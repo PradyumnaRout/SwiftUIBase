@@ -5,7 +5,7 @@
 //  Created by hb on 22/04/25.
 //
 
-import SwiftUICore
+import SwiftUI
 
 extension Font {
     static func sulphurFont(weight: SulphurFontWeight, size: CGFloat) -> Font {
