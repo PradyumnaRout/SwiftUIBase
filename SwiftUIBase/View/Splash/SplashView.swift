@@ -19,11 +19,41 @@ struct SplashView: View {
             Text("My App")
                 .font(.largeTitle)
         }
+        .environment(router)
         .onAppear {
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
 //                router.goToAuth()
                 router.goToMainApp()
             }
+        }
+    }
+}
+
+struct AppRootContainerView: View {
+    @EnvironmentObject var lockManager: AppLockManager
+    @Environment(\.isNetworkConnectd) private var isNetworkConnected
+    @Environment(AlertManager.self) private var alertManager
+    
+    var body: some View {
+        ZStack {
+            RootView()
+            // Show loading or authentication UI
+            if lockManager.isAuthenticating {
+                Color.black.opacity(0.4)
+                    .ignoresSafeArea()
+                
+                ProgressView()
+                    .tint(.white)
+                    .scaleEffect(1.5)
+            }
+            
+            if let alert = alertManager.alert {
+                AlertView(alert: alert, onDismiss: alertManager.dismiss)
+            }
+        }
+        .animation(.interactiveSpring(duration: 0.5), value: alertManager.alert)
+        .fullScreenCover(isPresented: .constant(!(isNetworkConnected ?? true))) {
+            NoInternetView()
         }
     }
 }
@@ -42,7 +72,13 @@ struct RootView: View {
         case .main:
             MainTabView()
         case .auth:
-            LoginView()
+            NavigationStack(path: router.currentPath) {
+                LoginView()
+                    .environment(router)
+                    .navigationDestination(for: AnyScreen.self) { screen in
+                        screen.build()
+                    }
+            }
         }
     }
 }

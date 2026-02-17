@@ -20,4 +20,6 @@ extension EnvironmentValues {
             self[RouterEnvKey.self] = newValue
         }
     }
+    
+    @Entry var isNetworkConnectd: Bool?
 }

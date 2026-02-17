@@ -16,13 +16,14 @@ public class NetworkService {
     static let shared = NetworkService()
     
     public var requestTimeOut: Float = 30
+    @State private var network = NetworkMonitor()
     
     public init() {}
     
     
     public func dataRequest<model: WSResponseData>(with inputRequest: RouterProtocol, showHud: Bool = false)  async throws -> WSResponse<model> {
         
-        if !NetworkReachability.shared.isNetworkAvailable() {
+        if !(network.isConnected ?? true) {
             HUDPresenter.shared.hide()
             throw NetworkError.mapError(NetworkError.noInternetConnection)
         }

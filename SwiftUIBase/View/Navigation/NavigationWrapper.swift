@@ -129,6 +129,21 @@ final class NavRouter {
 
     enum Tab: LocalizedStringResource, Hashable {
         case home, event, scanner, profile, setting
+        
+        var name: String {
+            switch self {
+            case .home:
+                return "Home"
+            case .event:
+                return "Event"
+            case .scanner:
+                return "Scanner"
+            case .profile:
+                return "Profile"
+            case .setting:
+                return "Setting"
+            }
+        }
     }
 
     enum SidebarItem: LocalizedStringResource, Hashable {

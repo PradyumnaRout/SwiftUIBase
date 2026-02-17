@@ -375,6 +375,7 @@
       }
     },
     "Show" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -403,6 +404,9 @@
           }
         }
       }
+    },
+    "Welcome Back" : {
+
     }
   },
   "version" : "1.1"

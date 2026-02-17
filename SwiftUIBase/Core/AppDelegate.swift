@@ -31,9 +31,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     
     func applicationDidFinishLaunching(_ application: UIApplication) {
         // Register for remote push notification, and get device token sucess
-        
-        NetworkReachability.shared.monitor.start(queue: DispatchQueue.main)
-        
 #if canImport(HBLogger)
         HBLogger.shared.enable()    // this will enable the logs of the app
         // HBLogger.shared.disableAutoNetworkLog()    // this will disable unnecessary logs from google, facebook and firebase
