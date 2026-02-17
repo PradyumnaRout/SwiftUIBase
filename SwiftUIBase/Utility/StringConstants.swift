@@ -98,3 +98,121 @@ struct AlertMessage {
     static let NewVersionAvailable = "New Version Available"
     static let ThereIsNewerVersion = "There Is Newer Version Available for Download! Please Update the App by Visiting the Apple Store."
 }
+
+
+// MARK: For multiple language change
+struct LocalizedString {
+    let key: String
+    
+    func callAsFunction(_ manager: LanguageManager = .shared) -> String {
+        localizedString(for: key, locale: manager.currentLocale)
+    }
+    // Call Like
+    // StringConst.enableBiometric(languageManager)
+    // StringConst.enableBiometric.callAsFunction(languageManager)
+    // No trick — just syntax sugar.
+
+
+    
+    private func localizedString(for key: String, locale: Locale) -> String {
+        let language = locale.language.languageCode?.identifier ?? "en"
+        
+        guard let path = Bundle.main.path(forResource: language, ofType: "lproj"),
+              let bundle = Bundle(path: path) else {
+            print("⚠️ Failed to find bundle for language: \(language)")
+            return key
+        }
+        
+        let localizedString = NSLocalizedString(key, bundle: bundle, comment: "")
+        print("🔤 Localized '\(key)' to '\(localizedString)' for \(language)")
+        return localizedString
+    }
+}
+
+struct StringConst {
+    static let welcomeKey = LocalizedString(key: "Welcome Back")
+    static let signInMessage = LocalizedString(key: "Sign in to your DropShop account")
+    static let addressLine1Header =
+        LocalizedString(key: NSLocalizedString("Address line 1", comment: ""))
+
+    static let addressLine1Plc =
+        LocalizedString(key: NSLocalizedString("Enter address line 1", comment: ""))
+
+    static let addressLine2Header =
+        LocalizedString(key: NSLocalizedString("Address line 2", comment: ""))
+
+    static let addressLine2Plc =
+        LocalizedString(key: NSLocalizedString("Enter address line 2", comment: ""))
+
+    static let postalCodeHeader =
+        LocalizedString(key: NSLocalizedString("Postal code", comment: ""))
+
+    static let postalCodePlc =
+        LocalizedString(key: NSLocalizedString("Enter postal code", comment: ""))
+
+    static let cityHeader =
+        LocalizedString(key: NSLocalizedString("City", comment: ""))
+
+    static let cityPlc =
+        LocalizedString(key: NSLocalizedString("Enter city", comment: ""))
+
+    static let stateHeader =
+        LocalizedString(key: NSLocalizedString("State / Province / Region", comment: ""))
+
+    static let statePlc =
+        LocalizedString(key: NSLocalizedString("Enter state / province / region", comment: ""))
+
+    static let countryHeader =
+        LocalizedString(key: NSLocalizedString("Country", comment: ""))
+
+    static let countryPlc =
+        LocalizedString(key: NSLocalizedString("Enter country", comment: ""))
+    
+    static let phoneNumberHeader =
+        LocalizedString(key: NSLocalizedString("Phone number", comment: ""))
+    
+    static let phoneNumberPlc =
+        LocalizedString(key: NSLocalizedString("Enter phone number", comment: ""))
+    
+    static let genderPlc =
+        LocalizedString(key: NSLocalizedString("Gender", comment: ""))
+    
+    static let select =
+        LocalizedString(key: NSLocalizedString("Select", comment: ""))
+    
+    static let searchOrders =
+        LocalizedString(key: NSLocalizedString("Search orders...", comment: ""))
+    
+    static let currentPassword =
+        LocalizedString(key: NSLocalizedString("Current password", comment: ""))
+    
+    static let newPassword =
+        LocalizedString(key: NSLocalizedString("New password", comment: ""))
+    
+    static let confirmPassword =
+        LocalizedString(key: NSLocalizedString("Confirm new password", comment: ""))
+    
+    static let yourUniqueId =
+        LocalizedString(key: NSLocalizedString("Your unique ID", comment: ""))
+    
+    static let enterUniqueId =
+        LocalizedString(key: NSLocalizedString("Enter unique ID", comment: ""))
+    
+    static let backToWalletTitle =
+        LocalizedString(key: NSLocalizedString("Back To Wallet", comment: ""))
+    
+    static let addToWalletTitle =
+        LocalizedString(key: NSLocalizedString("Add To Wallet", comment: ""))
+    
+    static let scanNow =
+        LocalizedString(key: NSLocalizedString("Scan Now", comment: ""))
+    static let scanEligibleProduct =
+        LocalizedString(key: NSLocalizedString("Scan Eligible Product", comment: ""))
+    static let startGame =
+        LocalizedString(key: NSLocalizedString("Start Game", comment: ""))
+}
+
+
+// Usage
+// @EnvironmentObject var languageManager: LanguageManager
+// StringConst.welcomeKey(languageManager)

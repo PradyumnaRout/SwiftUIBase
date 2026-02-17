@@ -4,6 +4,15 @@
     "" : {
 
     },
+    "Add To Wallet" : {
+
+    },
+    "Address line 1" : {
+
+    },
+    "Address line 2" : {
+
+    },
     "Another screen" : {
       "localizations" : {
         "de" : {
@@ -13,6 +22,9 @@
           }
         }
       }
+    },
+    "Back To Wallet" : {
+
     },
     "Change Tab From Inside" : {
       "localizations" : {
@@ -24,6 +36,9 @@
         }
       }
     },
+    "City" : {
+
+    },
     "Close" : {
       "localizations" : {
         "de" : {
@@ -33,6 +48,15 @@
           }
         }
       }
+    },
+    "Confirm new password" : {
+
+    },
+    "Country" : {
+
+    },
+    "Current password" : {
+
     },
     "dashboard" : {
       "localizations" : {
@@ -64,6 +88,30 @@
         }
       }
     },
+    "Enter address line 1" : {
+
+    },
+    "Enter address line 2" : {
+
+    },
+    "Enter city" : {
+
+    },
+    "Enter country" : {
+
+    },
+    "Enter phone number" : {
+
+    },
+    "Enter postal code" : {
+
+    },
+    "Enter state / province / region" : {
+
+    },
+    "Enter unique ID" : {
+
+    },
     "event" : {
       "localizations" : {
         "de" : {
@@ -93,6 +141,9 @@
           }
         }
       }
+    },
+    "Gender" : {
+
     },
     "Go Home Tab" : {
       "localizations" : {
@@ -184,6 +235,9 @@
         }
       }
     },
+    "New password" : {
+
+    },
     "Ok" : {
       "localizations" : {
         "de" : {
@@ -204,6 +258,9 @@
         }
       }
     },
+    "Phone number" : {
+
+    },
     "Pop" : {
       "localizations" : {
         "de" : {
@@ -213,6 +270,9 @@
           }
         }
       }
+    },
+    "Postal code" : {
+
     },
     "profile" : {
       "localizations" : {
@@ -284,6 +344,12 @@
         }
       }
     },
+    "Scan Eligible Product" : {
+
+    },
+    "Scan Now" : {
+
+    },
     "Scan Result" : {
       "localizations" : {
         "de" : {
@@ -323,6 +389,12 @@
           }
         }
       }
+    },
+    "Search orders..." : {
+
+    },
+    "Select" : {
+
     },
     "setting" : {
       "localizations" : {
@@ -405,7 +477,16 @@
         }
       }
     },
+    "Start Game" : {
+
+    },
+    "State / Province / Region" : {
+
+    },
     "Welcome Back" : {
+
+    },
+    "Your unique ID" : {
 
     }
   },

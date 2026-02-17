@@ -10,135 +10,167 @@ import CoreLocation
 
 
 protocol LocationUpdateDelegate: AnyObject {
-    func DidReceiveLocation(location: CLLocation, animationDuration: Double, isCalledFirstTime: Bool)
+    func didReceiveLocation(
+        _ location: CLLocation,
+        animationDuration: Double,
+        isFirstTime: Bool
+    )
 }
 
-class LocationManager: NSObject {
-    
+final class LocationManager: NSObject {
+
     static let shared = LocationManager()
-    private override init() {}
-    
-    var isFirstTime = true
-    var locationUpdateDelegate: LocationUpdateDelegate?
-    var changeLocationAuthorizationCallback: ((CLAuthorizationStatus) -> Void)?
+
     private let manager = CLLocationManager()
-    
-    var newLocation = CLLocation()
-    var oldLocation = CLLocation()
-    var placeMark: CLPlacemark?
-    var getLocation: ((Bool) -> Void)?
-}
+    private let geocoder = CLGeocoder()
 
-// MARK: Location Delegate -
+    weak var locationUpdateDelegate: LocationUpdateDelegate?
 
-extension LocationManager: CLLocationManagerDelegate {
-    
-    func getLocationPermission() -> Bool {
-        
+    var changeAuthorizationCallback: ((CLAuthorizationStatus) -> Void)?
+    var getLocationCompletion: ((Bool) -> Void)?
+
+    private(set) var newLocation: CLLocation?
+    private(set) var oldLocation: CLLocation?
+    private(set) var placemark: CLPlacemark?
+
+    private var isFirstTime = true
+
+    private override init() {
+        super.init()
+        configure()
+    }
+
+    // MARK: Setup
+
+    private func configure() {
+        manager.delegate = self
+        manager.activityType = .automotiveNavigation
+        manager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
+        manager.distanceFilter = 50
+        manager.pausesLocationUpdatesAutomatically = false
+    }
+
+    // MARK: Permission
+
+    @discardableResult
+    func requestLocationPermission() -> Bool {
+
         switch manager.authorizationStatus {
         case .notDetermined:
             manager.requestWhenInUseAuthorization()
-            manager.startUpdatingLocation()
-        case .restricted:
-            print("Location Restricted")
-        case .denied:
-            print("Location Denied")
-            self.changeLocationAuthorizationCallback?(.denied)
             return false
-        default:
+
+        case .restricted, .denied:
+            changeAuthorizationCallback?(.denied)
+            return false
+
+        case .authorizedAlways, .authorizedWhenInUse:
             manager.startUpdatingLocation()
-        }
-        
-        manager.activityType = .automotiveNavigation
-        manager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
-        manager.pausesLocationUpdatesAutomatically = false
-        manager.distanceFilter = 50
-        manager.delegate = self
-        
-        if (manager.authorizationStatus == .authorizedAlways) || (manager.authorizationStatus == .authorizedWhenInUse) {
-            print(manager.location?.coordinate.latitude as Any)
-            print(manager.location?.coordinate.longitude as Any)
             return true
-        }
-        return false
-    }
-    
-    func isLocationPermissionAllow() -> Bool {
-        if (manager.authorizationStatus == .authorizedAlways) || (manager.authorizationStatus == .authorizedWhenInUse) {
-            return true
-        }
-        return false
-    }
-    
-    func isLocationPermissionNotDetermined() -> Bool {
-        return manager.authorizationStatus == .notDetermined
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        
-        guard let location = locations.first else {
-            getLocation?(false)
-            return
-        }
-        
-        oldLocation = newLocation
-        newLocation = location
-        let distance = newLocation.distance(from: oldLocation)
-        let speed = newLocation.speed
-        locationUpdateDelegate?.DidReceiveLocation(location: location, animationDuration: distance/speed, isCalledFirstTime: isFirstTime)
-        isFirstTime = false
-        self.manager.stopUpdatingLocation()
-        getLocation?(true)
-    }
-    
-    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        if manager.authorizationStatus == .restricted || manager.authorizationStatus == .denied {
-            print("locationManagerDidChangeAuthorization - Location Restricted Or Denied")
-        }
-        if #available(iOS 14.0, *) {
-            self.changeLocationAuthorizationCallback?(manager.authorizationStatus)
-        } else {
-            // Fallback on earlier versions
+
+        @unknown default:
+            return false
         }
     }
-    
-    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        if status == .restricted || status == .denied {
-            print("didChangeAuthorization - Location Restricted Or Denied")
-        }
-        self.changeLocationAuthorizationCallback?(status)
+
+    var isPermissionGranted: Bool {
+        manager.authorizationStatus == .authorizedAlways ||
+        manager.authorizationStatus == .authorizedWhenInUse
+    }
+
+    var isPermissionNotDetermined: Bool {
+        manager.authorizationStatus == .notDetermined
     }
 }
 
-// MARK: General Methods
+// MARK: CLLocationManagerDelegate
+
+extension LocationManager: CLLocationManagerDelegate {
+
+    func locationManager(
+        _ manager: CLLocationManager,
+        didUpdateLocations locations: [CLLocation]
+    ) {
+
+        guard let location = locations.last else {
+            getLocationCompletion?(false)
+            return
+        }
+
+        oldLocation = newLocation
+        newLocation = location
+
+        let duration: Double
+        if let old = oldLocation,
+           location.speed > 0 {
+            let distance = location.distance(from: old)
+            duration = distance / location.speed
+        } else {
+            duration = 0
+        }
+
+        locationUpdateDelegate?.didReceiveLocation(
+            location,
+            animationDuration: duration,
+            isFirstTime: isFirstTime
+        )
+
+        isFirstTime = false
+        manager.stopUpdatingLocation()
+        getLocationCompletion?(true)
+    }
+
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        changeAuthorizationCallback?(manager.authorizationStatus)
+    }
+}
+
+// MARK: Reverse Geocoding (Modern)
 
 extension LocationManager {
-    
-    func getAddressFromLatLon(pdblLatitude: Any, withLongitude pdblLongitude: Any, completion: @escaping (CLPlacemark?) -> Void) {
-        
-        let lat: Double = Double("\(pdblLatitude)")!
-        let lon: Double = Double("\(pdblLongitude)")!
-        let ceo: CLGeocoder = CLGeocoder()
-        let loc: CLLocation = CLLocation(latitude: lat, longitude: lon)
-        
-        ceo.reverseGeocodeLocation(loc, completionHandler: { [weak self] (placemarks, error) in
-            
-            guard let _ = self else { return }
-            
-            if (error != nil) {
-                print("reverse geodcode fail: \(error!.localizedDescription)")
-            }
-            let pm = placemarks! as [CLPlacemark]
-            
-            if (pm.count > 0) {
-                let pmData = placemarks![0]
-                self?.placeMark = pmData
-                completion(pmData)
-            }
-        })
+
+    func reverseGeocode(
+        latitude: Double,
+        longitude: Double
+    ) async -> CLPlacemark? {
+
+        let location = CLLocation(latitude: latitude, longitude: longitude)
+
+        do {
+            let placemarks = try await geocoder.reverseGeocodeLocation(location)
+            placemark = placemarks.first
+            return placemark
+        } catch {
+            print("Reverse geocode failed:", error.localizedDescription)
+            return nil
+        }
+    }
+
+    func refreshPlacemark() async -> CLPlacemark? {
+        guard let loc = newLocation else { return nil }
+        return await reverseGeocode(
+            latitude: loc.coordinate.latitude,
+            longitude: loc.coordinate.longitude
+        )
     }
     
-    func refreshPlaceMark(_ completion: @escaping (CLPlacemark?) -> Void) {
-        self.getAddressFromLatLon(pdblLatitude: self.newLocation.coordinate.latitude, withLongitude: self.newLocation.coordinate.longitude, completion: completion)
+    // Get Address
+    @discardableResult
+    func currentAddress() async -> (city: String, country: String)? {
+        // Check for permission
+        guard LocationManager.shared.isPermissionGranted else {
+            print("Location permission not granted")
+            return nil
+        }
+        
+        if let placemark = await LocationManager.shared.refreshPlacemark() {
+            print("City:", placemark.locality ?? "")
+            print("Country:", placemark.country ?? "")
+        } else {
+            return nil
+        }
+        return nil
     }
+    
+
 }

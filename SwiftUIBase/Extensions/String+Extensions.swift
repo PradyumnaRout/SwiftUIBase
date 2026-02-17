@@ -7,58 +7,12 @@
 
 import Foundation
 extension String {
-    
-    /// Localizes a string using given language from Language enum.
-    /// - parameter language: The language that will be used to localized string.
-    /// - Returns: localized string.
-//    func localized(_ language: Language) -> String {
-//        let path = Bundle.main.path(forResource: language.rawValue, ofType: "lproj")
-//        let bundle: Bundle
-//        if let path = path {
-//            bundle = Bundle(path: path) ?? .main
-//        } else {
-//            bundle = .main
-//        }
-//        return localized(bundle: bundle)
-//    }
-    
-    /// Localizes a string using given language from Language enum.
-    ///  - Parameters:
-    ///  - language: The language that will be used to localized string.
-    ///  - args:  dynamic arguments provided for the localized string.
-    /// - Returns: localized string.
-//    func localized(_ language: Language, args arguments: CVarArg...) -> String {
-//        let path = Bundle.main.path(forResource: language.rawValue, ofType: "lproj")
-//        let bundle: Bundle
-//        if let path = path {
-//            bundle = Bundle(path: path) ?? .main
-//        } else {
-//            bundle = .main
-//        }
-//        return String(format: localized(bundle: bundle), arguments: arguments)
-//    }
-    
-    /// Localizes a string using self as key.
-    ///
-    /// - Parameters:
-    ///   - bundle: the bundle where the Localizable.strings file lies.
-    /// - Returns: localized string.
     private func localized(bundle: Bundle) -> String {
         return NSLocalizedString(self, tableName: nil, bundle: bundle, value: "", comment: "")
     }
     
     func trim() -> String {
         return self.trimmingCharacters(in: NSCharacterSet.whitespacesAndNewlines)
-    }
-    
-    func validatedText(validationType: ValidatorType, visibility: Bool = true, optional: Bool = false, becomeFirstResponder: Bool = true) throws -> String {
-        if (visibility == true && optional == false) || (visibility == true && optional == true  && !self.isEmpty) {
-            let validator = VaildatorFactory.validatorFor(type: validationType)
-           
-            return try validator.validated(self.trim())
-        } else {
-            return ""
-        }
     }
 }
 
@@ -117,3 +71,47 @@ extension String {
         )
     }
 }
+
+
+
+// Usage
+/**
+ func validate() {
+     do {
+         try Validator.validate(inputs.nickName, rules: [
+             Required(message: "Please enter nickname"),
+             Length(min: 3, max: 30, message: "Nickname should be minimum three characters")
+         ])
+         
+         try Validator.validate(inputs.firstName, rules: [
+             Required(message: "Please enter first name"),
+             Length(min: 2, max: 30, message: "First Name should be minimum two characters")
+         ])
+         
+         try Validator.validate(inputs.lastName, rules: [
+             Required(message: "Please enter last name"),
+             Length(min: 2, max: 30, message: "Last Name should be minimum two characters")
+         ])
+         
+         try Validator.validate(inputs.email, rules: [
+             Required(message: "Please enter email"),
+             Email(message: "Please enter a valid email")
+         ])
+         
+         try Validator.validate(inputs.dob, rules: [
+             Required(message: "Please enter your Date Of Birth"),
+         ])
+         
+         try Validator.validate(inputs.password, rules: [
+             Required(message: "Please enter password"),
+             StrongPassword(message: "Enter a valid password with 8 or more characters with a mix of letters, uppercase, lowercase, numbers & symbols")
+         ])
+         
+         try Validator.validate(inputs.confPassword, rules: [
+             Required(message: "Please enter confirm password"),
+             EqualTo(other: inputs.password, message: "Password and confirm password does not match")
+         ])
+     } catch {
+         GlobalUtility.shared.showAlert(body: error.localizedDescription)
+     }
+ */

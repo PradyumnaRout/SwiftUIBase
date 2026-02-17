@@ -25,7 +25,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 //        }
         
         // Start Updating location and after getting lat long, stopped location updation
-        setupLocationManager()
         return true
     }
     
@@ -46,16 +45,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         
         print("Application terminated")
     }
-    
-    func setupLocationManager() {
-        _ = LocationManager.shared.getLocationPermission()
-        LocationManager.shared.getLocation = { (_) in
-            LocationManager.shared.getLocation = nil
-            print("Latitude = \(LocationManager.shared.newLocation.coordinate.latitude)")
-            print("Longitude = \(LocationManager.shared.newLocation.coordinate.longitude)")
-        }
-    }
-    
     func application(
             _ app: UIApplication,
             open url: URL,
