@@ -167,10 +167,17 @@ final class NavRouter {
     ]
 
     // MARK: - Access current path
-    var currentPath: Binding<NavigationPath> {
+//    var currentPath: Binding<NavigationPath> {
+//        Binding(
+//            get: { self.routes[self.selectedTab] ?? NavigationPath() },
+//            set: { self.routes[self.selectedTab] = $0 }
+//        )
+//    }
+    
+    func currentPath(for tab: Tab) -> Binding<NavigationPath> {
         Binding(
-            get: { self.routes[self.selectedTab] ?? NavigationPath() },
-            set: { self.routes[self.selectedTab] = $0 }
+            get: { self.routes[tab] ?? NavigationPath() },
+            set: { self.routes[tab] = $0 }
         )
     }
 

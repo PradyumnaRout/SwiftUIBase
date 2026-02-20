@@ -72,7 +72,7 @@ struct RootView: View {
         case .main:
             MainTabView()
         case .auth:
-            NavigationStack(path: router.currentPath) {
+            NavigationStack(path: router.currentPath(for: .home)) {
                 LoginView()
                     .environment(router)
                     .navigationDestination(for: AnyScreen.self) { screen in
