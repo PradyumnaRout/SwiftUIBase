@@ -58,6 +58,12 @@ public extension RouterProtocol {
             }
             var urlRequest = URLRequest(url: getUrl?.url ?? url)
             urlRequest.httpMethod = method.rawValue
+            
+            if let headers = headers {
+                for (key, value) in headers {
+                    urlRequest.addValue(value, forHTTPHeaderField: key)
+                }
+            }
             return urlRequest
         }
         

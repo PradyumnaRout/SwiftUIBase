@@ -60,4 +60,31 @@ import UIKit
 //            .map({ $0 })
 //            .eraseToAnyPublisher()
 //    }
+
+
+//func signup(request: SignupRequest) async -> (data: SignupData?, message: String, success: Bool) {
+//    do {
+//        let userData: WSResponse<SignupData> = try await NetworkService.shared
+//            .dataRequest(with: AuthRouter.signUp(request: request))
+//        
+//        let message = userData.setting?.message ?? ""
+//        let success = userData.setting?.isSuccess ?? false
+//        
+//        guard let responseData = userData.data else {
+//            return (nil, message, userData.setting?.isSuccess ?? false)
+//        }
+//        
+//        switch responseData {
+//        case .array(let items):
+//            return (items.first, message, success)
+//            
+//        case .object(let item):
+//            return (item, message, success)
+//        }
+//        
+//    } catch {
+//        print(" Error -------> \(error.localizedDescription)")
+//        return (nil, "", false)
+//    }
+//}
 //}

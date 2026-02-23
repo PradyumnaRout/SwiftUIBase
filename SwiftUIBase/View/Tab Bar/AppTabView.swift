@@ -65,56 +65,6 @@ final class VMHolder<T: AnyObject>: ObservableObject {
 //}
 
 
-
-// Better Approach
-//struct MainTabView: View {
-//    @Environment(NavRouter.self) var router
-//    @Namespace private var tabNamespace
-//    @State private var visitedTabs: Set<NavRouter.Tab> = [.home]
-//
-//    var body: some View {
-//        @Bindable var router = router
-//        ZStack(alignment: .bottom) {
-//            ZStack {
-//                if visitedTabs.contains(.home) {
-//                    stack(HomeView(), tab: .home)
-//                }
-//                if visitedTabs.contains(.event) {
-//                    stack(EventView(), tab: .event)
-//                }
-//                if visitedTabs.contains(.scanner) {
-//                    stack(ScannerView(), tab: .scanner)
-//                }
-//                if visitedTabs.contains(.profile) {
-//                    stack(ProfileView(), tab: .profile)
-//                }
-//                if visitedTabs.contains(.setting) {
-//                    stack(SettingView(), tab: .setting)
-//                }
-//            }
-//
-//            CustomTabBar(selectedTab: $router.selectedTab, namespace: tabNamespace)
-//        }
-//        .onChange(of: router.selectedTab) { _, newTab in
-//            visitedTabs.insert(newTab)
-//        }
-//    }
-//
-//    @ViewBuilder
-//    private func stack<Content: View>(_ content: Content, tab: NavRouter.Tab) -> some View {
-//        NavigationStack(path: router.currentPath(for: tab)) {
-//            content
-//                .navigationDestination(for: AnyScreen.self) {
-//                    $0.build()
-//                }
-//        }
-//        .opacity(router.selectedTab == tab ? 1 : 0)
-//        .allowsHitTesting(router.selectedTab == tab)
-//        .toolbar(.hidden, for: .tabBar)
-//    }
-//}
-
-
 // Much Better
 struct MainTabView: View {
     
@@ -144,7 +94,9 @@ struct MainTabView: View {
                     .tag(NavRouter.Tab.setting)
             }
             // Custom Tab Bar
-            CustomTabBar(selectedTab: $router.selectedTab, namespace: tabNamespace)
+            if router.currentPath(for: router.selectedTab).wrappedValue.isEmpty {
+                CustomTabBar(selectedTab: $router.selectedTab, namespace: tabNamespace)
+            }
         }
     }
 
