@@ -30,6 +30,8 @@ struct SplashView: View {
 }
 
 struct AppRootContainerView: View {
+    @Environment(NavRouter.self) var router
+    @Environment(PushNotificationIntent.self) var pushIntent
     @EnvironmentObject var lockManager: AppLockManager
     @Environment(\.isNetworkConnectd) private var isNetworkConnected
     @Environment(AlertManager.self) private var alertManager
@@ -54,6 +56,25 @@ struct AppRootContainerView: View {
         .animation(.interactiveSpring(duration: 0.5), value: alertManager.alert)
         .fullScreenCover(isPresented: .constant(!(isNetworkConnected ?? true))) {
             NoInternetView()
+        }
+        .onChange(data: pushIntent.notiType) { route in
+            guard let route, router.appFlow == .main else { return }
+            handlePushRoute(route)
+            pushIntent.notiType = nil
+        }
+    }
+    
+    private func handlePushRoute(_ route: PushNotificationIntent.PushRoute) {
+        switch route {
+        case .home(let id):
+            router.switchTab(.home)
+//            router.push(<#T##screen: AnyScreen##AnyScreen#>)
+        case .redeem(let id):
+            router.switchTab(.event)
+        case .wallet(let id):
+            router.switchTab(.setting)
+        case .profile(let id):
+            router.switchTab(.profile)
         }
     }
 }

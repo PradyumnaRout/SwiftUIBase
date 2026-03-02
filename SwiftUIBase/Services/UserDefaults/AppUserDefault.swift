@@ -14,6 +14,7 @@ struct UserDefaultsKey {
     static let authToken = "auth_token"
     static let logedInUser = "logedInUser"
     static let deviceTokenKey = "deviceTokenKey"
+    static let fcmToken = "fcm_token"
     static let ws_token = "ws_token"
     static let userDetail = "user_detail"
     static let userLocationDetail = "user_Locationdetail"

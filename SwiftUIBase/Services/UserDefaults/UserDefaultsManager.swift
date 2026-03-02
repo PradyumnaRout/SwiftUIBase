@@ -20,6 +20,15 @@ struct UserDefaultsManager {
         }
     }
     
+    static var fcmToken: String {
+        get {
+            return applicationDefaults.string(forKey: UserDefaultsKey.fcmToken) ?? UUID().uuidString
+        }
+        set {
+            applicationDefaults.setValue(newValue, forKey: UserDefaultsKey.fcmToken)
+        }
+    }
+    
     static var deviceTokenData: Data {
         get {
             return (applicationDefaults.value(forKey: UserDefaultsKey.deviceTokenDataKey) as? Data) ?? Data()

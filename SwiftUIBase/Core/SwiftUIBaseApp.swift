@@ -19,6 +19,8 @@ struct SwiftUIBaseApp: App {
     @StateObject private var themeManager = ThemeManager()
     @State private var networkMonitor = NetworkMonitor()
     @State private var alertManager = AlertManager()
+    @State private var pushIntent = PushNotificationIntent()
+
 
     init() {
         let manager = LanguageManager.shared
@@ -34,6 +36,7 @@ struct SwiftUIBaseApp: App {
             AppRootContainerView()
             // .environmentObject(router)
                 .environment(router)
+                .environment(pushIntent)
                 .environmentObject(languageManager)
                 .environmentObject(lockManager)
                 .environmentObject(themeManager)
@@ -41,6 +44,9 @@ struct SwiftUIBaseApp: App {
                 .environment(\.locale, languageManager.currentLocale)
                 .environment(alertManager)
                 .id(languageManager.refreshID)
+                .onAppear {
+                    appDelegate.pushIntent = pushIntent
+                }
         }
         .onChange(of: scenePhase) { oldPhase, newPhase in
             switch newPhase {

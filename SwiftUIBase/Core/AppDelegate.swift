@@ -11,18 +11,29 @@ import UIKit
 import Network
 internal import _LocationEssentials
 import GoogleSignIn
+import FirebaseCore
+import FirebaseMessaging
+
 
 
 class AppDelegate: NSObject, UIApplicationDelegate {
+    let location = LocationManager.shared
+    weak var pushIntent: PushNotificationIntent?
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
         print("Application launched")
         
-        // For Crashlytics
-//        FirebaseApp.configure()
-//
-//        self.registerRemoteNotification { success in
-//            print("Token \(success)")
-//        }
+        // ✅ Configure Firebase first
+        FirebaseApp.configure()
+        
+        // ✅ Set Messaging delegate
+        Messaging.messaging().delegate = self
+        
+        // ✅ Register for push notifications
+
+        self.registerRemoteNotification { success in
+            print("Token \(success)")
+        }
         
         // Start Updating location and after getting lat long, stopped location updation
         return true

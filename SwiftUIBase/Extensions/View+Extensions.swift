@@ -39,3 +39,27 @@ extension View {
         }
     }
 }
+
+extension View {
+    func onChange<T: Equatable>(data: T, perform action: @escaping (T) -> Void) -> some View {
+        self.modifier(ChangeValue(data: data, action: action))
+    }
+}
+
+struct ChangeValue<T: Equatable>: ViewModifier {
+    var data: T
+    var action: ((T) -> Void)
+    func body(content: Content) -> some View {
+        if #available(iOS 17.0, *) {
+            content
+                .onChange(of: data) { oldValue, newValue in
+                    action(newValue)
+                }
+        } else {
+            content
+                .onChange(of: data) { newValue in
+                    action(newValue)
+                }
+        }
+    }
+}
