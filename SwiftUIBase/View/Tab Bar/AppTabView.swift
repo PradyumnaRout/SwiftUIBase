@@ -98,6 +98,7 @@ struct MainTabView: View {
                 CustomTabBar(selectedTab: $router.selectedTab, namespace: tabNamespace)
             }
         }
+        .animation(.easeInOut, value: router.currentPath(for: router.selectedTab).wrappedValue.isEmpty)
     }
 
     @ViewBuilder
